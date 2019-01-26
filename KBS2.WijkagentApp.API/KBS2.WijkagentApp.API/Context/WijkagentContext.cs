@@ -28,14 +28,6 @@ namespace KBS2.WijkagentApp.API.Context
         public virtual DbSet<Socials> Socials { get; set; }
         public virtual DbSet<SoundRecord> SoundRecord { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Data Source=wijkagent.database.windows.net;Initial Catalog=Wijkagent;Persist Security Info=True;User ID=dbAgent1;Password=123dbAgent!");
-            }
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
