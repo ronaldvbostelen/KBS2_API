@@ -256,6 +256,10 @@ namespace KBS2.WijkagentApp.API.Context
 
                 entity.Property(e => e.longitude).HasColumnType("decimal(18, 10)");
 
+                entity.Property(e => e.status)
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
                 entity.HasOne(d => d.officer)
                     .WithMany(p => p.PushMessage)
                     .HasForeignKey(d => d.officerId)

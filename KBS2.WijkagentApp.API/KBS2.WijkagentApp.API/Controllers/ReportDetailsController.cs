@@ -21,13 +21,7 @@ namespace KBS2.WijkagentApp.API.Controllers
             _context = context;
         }
 
-        // GET: api/ReportDetails
-        [HttpGet]
-        public IEnumerable<ReportDetails> GetReportDetails()
-        {
-            return _context.ReportDetails;
-        }
-
+        //all reportdetails based on reportId
         // GET: api/ReportDetails/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetReportDetails([FromRoute] Guid id)
@@ -37,9 +31,9 @@ namespace KBS2.WijkagentApp.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var reportDetails = await _context.ReportDetails.FindAsync(id);
+            var reportDetails = await Task.Run(() => _context.ReportDetails.Where(x => x.reportId.Equals(id)).AsEnumerable());
 
-            if (reportDetails == null)
+            if (reportDetails == null || !reportDetails.Any())
             {
                 return NotFound();
             }

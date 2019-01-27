@@ -21,14 +21,8 @@ namespace KBS2.WijkagentApp.API.Controllers
             _context = context;
         }
 
-        // GET: api/OfficialReports
-        [HttpGet]
-        public IEnumerable<OfficialReport> GetOfficialReport()
-        {
-            return _context.OfficialReport;
-        }
-
-        // GET: api/OfficialReports/5
+        //based on reportId
+        // GET: OfficialReports/{reportId}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOfficialReport([FromRoute] Guid id)
         {
@@ -37,9 +31,9 @@ namespace KBS2.WijkagentApp.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var officialReport = await _context.OfficialReport.FindAsync(id);
+            var officialReport = await Task.Run(() => _context.OfficialReport.Where(x => x.reportId.Equals(id)));
 
-            if (officialReport == null)
+            if (officialReport == null || !officialReport.Any())
             {
                 return NotFound();
             }

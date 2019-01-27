@@ -21,11 +21,12 @@ namespace KBS2.WijkagentApp.API.Controllers
             _context = context;
         }
 
+        //fetch active emergencies
         // GET: api/Emergencies
         [HttpGet]
         public IEnumerable<Emergency> GetEmergency()
         {
-            return _context.Emergency;
+            return _context.Emergency.Where(x => x.status == "A").AsEnumerable();
         }
 
         // GET: api/Emergencies/5
@@ -110,28 +111,7 @@ namespace KBS2.WijkagentApp.API.Controllers
 
             return CreatedAtAction("GetEmergency", new { id = emergency.emergencyId }, emergency);
         }
-
-        // DELETE: api/Emergencies/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEmergency([FromRoute] Guid id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var emergency = await _context.Emergency.FindAsync(id);
-            if (emergency == null)
-            {
-                return NotFound();
-            }
-
-            _context.Emergency.Remove(emergency);
-            await _context.SaveChangesAsync();
-
-            return Ok(emergency);
-        }
-
+        
         //PATCH ID
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] Emergency emergency)

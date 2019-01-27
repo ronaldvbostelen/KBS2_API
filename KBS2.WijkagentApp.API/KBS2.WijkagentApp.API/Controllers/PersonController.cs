@@ -20,14 +20,7 @@ namespace KBS2.WijkagentApp.API.Controllers
         {
             _context = context;
         }
-
-        // GET: api/People
-        [HttpGet]
-        public IEnumerable<Person> GetPerson()
-        {
-            return _context.Person;
-        }
-
+        
         // GET: api/People/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPerson([FromRoute] Guid id)

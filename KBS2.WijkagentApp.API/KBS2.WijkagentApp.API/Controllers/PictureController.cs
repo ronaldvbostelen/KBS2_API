@@ -20,14 +20,8 @@ namespace KBS2.WijkagentApp.API.Controllers
         {
             _context = context;
         }
-
-        // GET: api/Pictures
-        [HttpGet]
-        public IEnumerable<Picture> GetPicture()
-        {
-            return _context.Picture;
-        }
-
+        
+        //officalreportId
         // GET: api/Pictures/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPicture([FromRoute] Guid id)
@@ -37,9 +31,9 @@ namespace KBS2.WijkagentApp.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var picture = await _context.Picture.FindAsync(id);
+            var picture = await Task.Run(() => _context.Picture.Where(x => x.officialReportId.Equals(id)).AsEnumerable());
 
-            if (picture == null)
+            if (picture == null || !picture.Any())
             {
                 return NotFound();
             }

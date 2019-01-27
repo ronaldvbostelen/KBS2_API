@@ -20,14 +20,8 @@ namespace KBS2.WijkagentApp.API.Controllers
         {
             _context = context;
         }
-
-        // GET: api/SoundRecords
-        [HttpGet]
-        public IEnumerable<SoundRecord> GetSoundRecord()
-        {
-            return _context.SoundRecord;
-        }
-
+        
+        //based on officialreportId
         // GET: api/SoundRecords/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSoundRecord([FromRoute] Guid id)
@@ -37,9 +31,9 @@ namespace KBS2.WijkagentApp.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var soundRecord = await _context.SoundRecord.FindAsync(id);
+            var soundRecord = await Task.Run(() => _context.SoundRecord.Where(x => x.officialReportId.Equals(id)).AsEnumerable());
 
-            if (soundRecord == null)
+            if (soundRecord == null || !soundRecord.Any())
             {
                 return NotFound();
             }

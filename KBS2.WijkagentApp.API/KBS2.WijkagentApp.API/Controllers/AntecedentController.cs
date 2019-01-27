@@ -21,14 +21,8 @@ namespace KBS2.WijkagentApp.API.Controllers
             _context = context;
         }
 
-        // GET: api/Antecedents
-        [HttpGet]
-        public IEnumerable<Antecedent> GetAntecedent()
-        {
-            return _context.Antecedent;
-        }
-
-        // GET: api/Antecedents/5
+        //lookup antecedents with personId
+        // GET: Antecedents/{personId}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAntecedent([FromRoute] Guid id)
         {
@@ -37,17 +31,18 @@ namespace KBS2.WijkagentApp.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var antecedent = await _context.Antecedent.FindAsync(id);
+            var antecedents = await Task.Run(() => _context.Antecedent.Where(x => x.personId.Equals(id)).AsEnumerable());
 
-            if (antecedent == null)
+            if (antecedents == null || !antecedents.Any())
             {
                 return NotFound();
             }
 
-            return Ok(antecedent);
+            return Ok(antecedents);
         }
 
-        // PUT: api/Antecedents/5
+        //update entry based on antecedentId
+        // PUT: api/Antecedents/{antecedentId}
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAntecedent([FromRoute] Guid id, [FromBody] Antecedent antecedent)
         {
@@ -82,6 +77,7 @@ namespace KBS2.WijkagentApp.API.Controllers
             return NoContent();
         }
 
+        //insert into
         // POST: api/Antecedents
         [HttpPost]
         public async Task<IActionResult> PostAntecedent([FromBody] Antecedent antecedent)
@@ -111,7 +107,7 @@ namespace KBS2.WijkagentApp.API.Controllers
             return CreatedAtAction("GetAntecedent", new { id = antecedent.antecedentId }, antecedent);
         }
 
-        // DELETE: api/Antecedents/5
+        // DELETE: based on antecentID
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAntecedent([FromRoute] Guid id)
         {
@@ -132,6 +128,7 @@ namespace KBS2.WijkagentApp.API.Controllers
             return Ok(antecedent);
         }
 
+        //update based on antecentID
         //PATCH ID
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] Antecedent antecedent)
