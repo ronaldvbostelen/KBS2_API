@@ -390,9 +390,26 @@ namespace KBS2.WijkagentApp.API.Context
                     .HasConstraintName("FK_SoundRecord_OfficialReport");
             });
 
+            modelBuilder.Entity<testTable>(entity =>
+            {
+                entity.HasKey(e => e.id);
+
+                entity.Property(e => e.id);
+                
+                entity.Property(e => e.alsosomething)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.something)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
             OnModelCreatingPartial(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        public DbSet<KBS2.WijkagentApp.API.Models.testTable> testTable { get; set; }
     }
 }

@@ -10,13 +10,13 @@ using KBS2.WijkagentApp.API.Models;
 
 namespace KBS2.WijkagentApp.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/tables/[controller]")]
     [ApiController]
-    public class PicturesController : ControllerBase
+    public class PictureController : ControllerBase
     {
         private readonly WijkagentContext _context;
 
-        public PicturesController(WijkagentContext context)
+        public PictureController(WijkagentContext context)
         {
             _context = context;
         }
@@ -128,6 +128,42 @@ namespace KBS2.WijkagentApp.API.Controllers
 
             _context.Picture.Remove(picture);
             await _context.SaveChangesAsync();
+
+            return Ok(picture);
+        }
+
+
+        //PATCH ID
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] Picture picture)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != picture.pictureId)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(picture).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PictureExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return Ok(picture);
         }

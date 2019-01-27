@@ -2,66 +2,66 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using KBS2.WijkagentApp.API.Context;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using KBS2.WijkagentApp.API.Context;
 using KBS2.WijkagentApp.API.Models;
 
 namespace KBS2.WijkagentApp.API.Controllers
 {
     [Route("api/tables/[controller]")]
     [ApiController]
-    public class ReportDetailsController : ControllerBase
+    public class testTableController : ControllerBase
     {
         private readonly WijkagentContext _context;
 
-        public ReportDetailsController(WijkagentContext context)
+        public testTableController(WijkagentContext context)
         {
             _context = context;
         }
 
-        // GET: api/ReportDetails
+        // GET: api/testTable
         [HttpGet]
-        public IEnumerable<ReportDetails> GetReportDetails()
+        public IEnumerable<testTable> GettestTable()
         {
-            return _context.ReportDetails;
+            return _context.testTable;
         }
 
-        // GET: api/ReportDetails/5
+        // GET: api/testTable/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetReportDetails([FromRoute] Guid id)
+        public async Task<IActionResult> GettestTable([FromRoute] Guid id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var reportDetails = await _context.ReportDetails.FindAsync(id);
+            var testTable = await _context.testTable.FindAsync(id);
 
-            if (reportDetails == null)
+            if (testTable == null)
             {
                 return NotFound();
             }
 
-            return Ok(reportDetails);
+            return Ok(testTable);
         }
 
-        // PUT: api/ReportDetails/5
+        // PUT: api/testTable/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutReportDetails([FromRoute] Guid id, [FromBody] ReportDetails reportDetails)
+        public async Task<IActionResult> PuttestTable([FromRoute] Guid id, [FromBody] testTable testTable)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != reportDetails.reportId)
+            if (id != testTable.id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(reportDetails).State = EntityState.Modified;
+            _context.Entry(testTable).State = EntityState.Modified;
 
             try
             {
@@ -69,7 +69,7 @@ namespace KBS2.WijkagentApp.API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ReportDetailsExists(id))
+                if (!testTableExists(id))
                 {
                     return NotFound();
                 }
@@ -82,23 +82,23 @@ namespace KBS2.WijkagentApp.API.Controllers
             return NoContent();
         }
 
-        // POST: api/ReportDetails
+        // POST: api/testTable
         [HttpPost]
-        public async Task<IActionResult> PostReportDetails([FromBody] ReportDetails reportDetails)
+        public async Task<IActionResult> PosttestTable([FromBody] testTable testTable)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.ReportDetails.Add(reportDetails);
+            _context.testTable.Add(testTable);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (ReportDetailsExists(reportDetails.reportId))
+                if (testTableExists(testTable.id))
                 {
                     return new StatusCodeResult(StatusCodes.Status409Conflict);
                 }
@@ -108,46 +108,45 @@ namespace KBS2.WijkagentApp.API.Controllers
                 }
             }
 
-            return CreatedAtAction("GetReportDetails", new { id = reportDetails.reportId }, reportDetails);
+            return CreatedAtAction("GettestTable", new { id = testTable.id }, testTable);
         }
 
-        // DELETE: api/ReportDetails/5
+        // DELETE: api/testTable/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteReportDetails([FromRoute] Guid id)
+        public async Task<IActionResult> DeletetestTable([FromRoute] Guid id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var reportDetails = await _context.ReportDetails.FindAsync(id);
-            if (reportDetails == null)
+            var testTable = await _context.testTable.FindAsync(id);
+            if (testTable == null)
             {
                 return NotFound();
             }
 
-            _context.ReportDetails.Remove(reportDetails);
+            _context.testTable.Remove(testTable);
             await _context.SaveChangesAsync();
 
-            return Ok(reportDetails);
+            return Ok(testTable);
         }
-
 
         //PATCH ID
         [HttpPatch("{id}")]
-        public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] ReportDetails reportDetails)
+        public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] testTable testTable)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != reportDetails.reportId)
+            if (id != testTable.id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(reportDetails).State = EntityState.Modified;
+            _context.Entry(testTable).State = EntityState.Modified;
 
             try
             {
@@ -155,7 +154,7 @@ namespace KBS2.WijkagentApp.API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ReportDetailsExists(id))
+                if (!testTableExists(id))
                 {
                     return NotFound();
                 }
@@ -165,12 +164,12 @@ namespace KBS2.WijkagentApp.API.Controllers
                 }
             }
 
-            return Ok(reportDetails);
+            return Ok(testTable);
         }
 
-        private bool ReportDetailsExists(Guid id)
+        private bool testTableExists(Guid id)
         {
-            return _context.ReportDetails.Any(e => e.reportId == id);
+            return _context.testTable.Any(e => e.id == id);
         }
     }
 }

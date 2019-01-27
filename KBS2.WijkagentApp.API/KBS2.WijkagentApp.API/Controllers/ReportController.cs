@@ -10,13 +10,13 @@ using KBS2.WijkagentApp.API.Models;
 
 namespace KBS2.WijkagentApp.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/tables/[controller]")]
     [ApiController]
-    public class ReportsController : ControllerBase
+    public class ReportController : ControllerBase
     {
         private readonly WijkagentContext _context;
 
-        public ReportsController(WijkagentContext context)
+        public ReportController(WijkagentContext context)
         {
             _context = context;
         }
@@ -128,6 +128,42 @@ namespace KBS2.WijkagentApp.API.Controllers
 
             _context.Report.Remove(report);
             await _context.SaveChangesAsync();
+
+            return Ok(report);
+        }
+
+
+        //PATCH ID
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] Report report)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != report.reportId)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(report).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ReportExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return Ok(report);
         }

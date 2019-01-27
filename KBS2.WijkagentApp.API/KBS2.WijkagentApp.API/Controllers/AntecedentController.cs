@@ -10,13 +10,13 @@ using KBS2.WijkagentApp.API.Models;
 
 namespace KBS2.WijkagentApp.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/tables/[controller]")]
     [ApiController]
-    public class AntecedentsController : ControllerBase
+    public class AntecedentController : ControllerBase
     {
         private readonly WijkagentContext _context;
 
-        public AntecedentsController(WijkagentContext context)
+        public AntecedentController(WijkagentContext context)
         {
             _context = context;
         }
@@ -128,6 +128,41 @@ namespace KBS2.WijkagentApp.API.Controllers
 
             _context.Antecedent.Remove(antecedent);
             await _context.SaveChangesAsync();
+
+            return Ok(antecedent);
+        }
+
+        //PATCH ID
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] Antecedent antecedent)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != antecedent.antecedentId)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(antecedent).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AntecedentExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return Ok(antecedent);
         }

@@ -10,13 +10,13 @@ using KBS2.WijkagentApp.API.Models;
 
 namespace KBS2.WijkagentApp.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/tables/[controller]")]
     [ApiController]
-    public class SoundRecordsController : ControllerBase
+    public class SoundRecordController : ControllerBase
     {
         private readonly WijkagentContext _context;
 
-        public SoundRecordsController(WijkagentContext context)
+        public SoundRecordController(WijkagentContext context)
         {
             _context = context;
         }
@@ -56,7 +56,7 @@ namespace KBS2.WijkagentApp.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != soundRecord.officialReportId)
+            if (id != soundRecord.soundRecordId)
             {
                 return BadRequest();
             }
@@ -98,7 +98,7 @@ namespace KBS2.WijkagentApp.API.Controllers
             }
             catch (DbUpdateException)
             {
-                if (SoundRecordExists(soundRecord.officialReportId))
+                if (SoundRecordExists(soundRecord.soundRecordId))
                 {
                     return new StatusCodeResult(StatusCodes.Status409Conflict);
                 }
@@ -132,9 +132,45 @@ namespace KBS2.WijkagentApp.API.Controllers
             return Ok(soundRecord);
         }
 
+
+        //PATCH ID
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] SoundRecord soundRecord)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != soundRecord.soundRecordId)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(soundRecord).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!SoundRecordExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Ok(soundRecord);
+        }
+
         private bool SoundRecordExists(Guid id)
         {
-            return _context.SoundRecord.Any(e => e.officialReportId == id);
+            return _context.SoundRecord.Any(e => e.soundRecordId == id);
         }
     }
 }

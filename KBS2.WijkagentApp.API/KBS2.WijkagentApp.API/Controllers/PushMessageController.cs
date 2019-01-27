@@ -10,13 +10,13 @@ using KBS2.WijkagentApp.API.Models;
 
 namespace KBS2.WijkagentApp.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/tables/[controller]")]
     [ApiController]
-    public class PushMessagesController : ControllerBase
+    public class PushMessageController : ControllerBase
     {
         private readonly WijkagentContext _context;
 
-        public PushMessagesController(WijkagentContext context)
+        public PushMessageController(WijkagentContext context)
         {
             _context = context;
         }
@@ -128,6 +128,42 @@ namespace KBS2.WijkagentApp.API.Controllers
 
             _context.PushMessage.Remove(pushMessage);
             await _context.SaveChangesAsync();
+
+            return Ok(pushMessage);
+        }
+
+
+        //PATCH ID
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] PushMessage pushMessage)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != pushMessage.pushMessageId)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(pushMessage).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PushMessageExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return Ok(pushMessage);
         }

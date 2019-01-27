@@ -10,13 +10,13 @@ using KBS2.WijkagentApp.API.Models;
 
 namespace KBS2.WijkagentApp.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/tables/[controller]")]
     [ApiController]
-    public class AddressesController : ControllerBase
+    public class AddressController : ControllerBase
     {
         private readonly WijkagentContext _context;
 
-        public AddressesController(WijkagentContext context)
+        public AddressController(WijkagentContext context)
         {
             _context = context;
         }
@@ -128,6 +128,41 @@ namespace KBS2.WijkagentApp.API.Controllers
 
             _context.Address.Remove(address);
             await _context.SaveChangesAsync();
+
+            return Ok(address);
+        }
+
+        //PATCH ID
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] Address address)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != address.personId)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(address).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AddressExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return Ok(address);
         }

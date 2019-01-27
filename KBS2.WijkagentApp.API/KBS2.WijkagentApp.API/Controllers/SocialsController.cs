@@ -10,7 +10,7 @@ using KBS2.WijkagentApp.API.Models;
 
 namespace KBS2.WijkagentApp.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/tables/[controller]")]
     [ApiController]
     public class SocialsController : ControllerBase
     {
@@ -128,6 +128,42 @@ namespace KBS2.WijkagentApp.API.Controllers
 
             _context.Socials.Remove(socials);
             await _context.SaveChangesAsync();
+
+            return Ok(socials);
+        }
+
+
+        //PATCH ID
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] Socials socials)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != socials.socialsId)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(socials).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!SocialsExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return Ok(socials);
         }

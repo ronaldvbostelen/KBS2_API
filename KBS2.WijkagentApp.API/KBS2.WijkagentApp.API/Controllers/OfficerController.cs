@@ -10,13 +10,13 @@ using KBS2.WijkagentApp.API.Models;
 
 namespace KBS2.WijkagentApp.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/tables/[controller]")]
     [ApiController]
-    public class OfficersController : ControllerBase
+    public class OfficerController : ControllerBase
     {
         private readonly WijkagentContext _context;
 
-        public OfficersController(WijkagentContext context)
+        public OfficerController(WijkagentContext context)
         {
             _context = context;
         }
@@ -128,6 +128,42 @@ namespace KBS2.WijkagentApp.API.Controllers
 
             _context.Officer.Remove(officer);
             await _context.SaveChangesAsync();
+
+            return Ok(officer);
+        }
+
+
+        //PATCH ID
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] Officer officer)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != officer.officerId)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(officer).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!OfficerExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return Ok(officer);
         }
