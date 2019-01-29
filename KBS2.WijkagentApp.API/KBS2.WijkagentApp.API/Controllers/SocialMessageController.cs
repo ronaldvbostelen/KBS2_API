@@ -21,13 +21,7 @@ namespace KBS2.WijkagentApp.API.Controllers
             _context = context;
         }
 
-        // GET: api/SocialMessages
-        [HttpGet]
-        public IEnumerable<SocialMessage> GetSocialMessage()
-        {
-            return _context.SocialMessage;
-        }
-
+        //messages based on socialId
         // GET: api/SocialMessages/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSocialMessage([FromRoute] Guid id)
@@ -37,9 +31,9 @@ namespace KBS2.WijkagentApp.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var socialMessage = await _context.SocialMessage.FindAsync(id);
+            var socialMessage = await Task.Run(() => _context.SocialMessage.Where(x => x.socialsId.Equals(id)).AsEnumerable());
 
-            if (socialMessage == null)
+            if (socialMessage == null || !socialMessage.Any())
             {
                 return NotFound();
             }

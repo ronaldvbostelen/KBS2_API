@@ -20,14 +20,8 @@ namespace KBS2.WijkagentApp.API.Controllers
         {
             _context = context;
         }
-
-        // GET: api/PushMessages
-        [HttpGet]
-        public IEnumerable<PushMessage> GetPushMessage()
-        {
-            return _context.PushMessage;
-        }
-
+        
+        //based on officerID & status (pushmessages are directed to a certain person)
         // GET: api/PushMessages/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPushMessage([FromRoute] Guid id)
@@ -37,9 +31,9 @@ namespace KBS2.WijkagentApp.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var pushMessage = await _context.PushMessage.FindAsync(id);
+            var pushMessage = await Task.Run(() => _context.PushMessage.Where(x => x.officerId.Equals(id) && x.status != "D").AsEnumerable());
 
-            if (pushMessage == null)
+            if (pushMessage == null || !pushMessage.Any())
             {
                 return NotFound();
             }
@@ -110,28 +104,6 @@ namespace KBS2.WijkagentApp.API.Controllers
 
             return CreatedAtAction("GetPushMessage", new { id = pushMessage.pushMessageId }, pushMessage);
         }
-
-        // DELETE: api/PushMessages/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePushMessage([FromRoute] Guid id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var pushMessage = await _context.PushMessage.FindAsync(id);
-            if (pushMessage == null)
-            {
-                return NotFound();
-            }
-
-            _context.PushMessage.Remove(pushMessage);
-            await _context.SaveChangesAsync();
-
-            return Ok(pushMessage);
-        }
-
 
         //PATCH ID
         [HttpPatch("{id}")]

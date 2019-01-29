@@ -21,30 +21,23 @@ namespace KBS2.WijkagentApp.API.Controllers
             _context = context;
         }
 
-        // GET: api/Officers
+        //get logincredentials based on username/password (NB: NOT SAVE, MAYBE WITH HTTPS)
         [HttpGet]
-        public IEnumerable<Officer> GetOfficer()
-        {
-            return _context.Officer;
-        }
-
-        // GET: api/Officers/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetOfficer([FromRoute] Guid id)
+        public async Task<IActionResult> GetOfficer([FromBody] Officer officer)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var officer = await _context.Officer.FindAsync(id);
+            var lookUpofficer = await Task.Run(() => (_context.Officer.Where(x => x.userName.Equals(officer.userName) && x.passWord.Equals(officer.passWord))));
 
-            if (officer == null)
+            if (lookUpofficer == null || !lookUpofficer.Any())
             {
                 return NotFound();
             }
 
-            return Ok(officer);
+            return Ok(lookUpofficer);
         }
 
         // PUT: api/Officers/5

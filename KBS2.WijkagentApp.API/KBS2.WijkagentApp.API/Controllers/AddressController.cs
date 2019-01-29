@@ -21,14 +21,8 @@ namespace KBS2.WijkagentApp.API.Controllers
             _context = context;
         }
 
-        // GET: api/Addresses
-        [HttpGet]
-        public IEnumerable<Address> GetAddress()
-        {
-            return _context.Address;
-        }
-
-        // GET: api/Addresses/5
+        //select
+        // GET: /Addresses/{personID}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAddress([FromRoute] Guid id)
         {
@@ -47,7 +41,8 @@ namespace KBS2.WijkagentApp.API.Controllers
             return Ok(address);
         }
 
-        // PUT: api/Addresses/5
+        //update
+        // PUT: Addresses/{personID}
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAddress([FromRoute] Guid id, [FromBody] Address address)
         {
@@ -82,6 +77,7 @@ namespace KBS2.WijkagentApp.API.Controllers
             return NoContent();
         }
 
+        //insert
         // POST: api/Addresses
         [HttpPost]
         public async Task<IActionResult> PostAddress([FromBody] Address address)
@@ -111,7 +107,7 @@ namespace KBS2.WijkagentApp.API.Controllers
             return CreatedAtAction("GetAddress", new { id = address.personId }, address);
         }
 
-        // DELETE: api/Addresses/5
+        // DELETE: Addresses/{personID}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAddress([FromRoute] Guid id)
         {
@@ -132,6 +128,7 @@ namespace KBS2.WijkagentApp.API.Controllers
             return Ok(address);
         }
 
+        //update
         //PATCH ID
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] Address address)

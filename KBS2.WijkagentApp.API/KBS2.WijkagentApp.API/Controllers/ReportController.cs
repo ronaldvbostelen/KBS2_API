@@ -21,11 +21,11 @@ namespace KBS2.WijkagentApp.API.Controllers
             _context = context;
         }
 
-        // GET: api/Reports
+        // GET: returns all reports except with status D (done)
         [HttpGet]
         public IEnumerable<Report> GetReport()
         {
-            return _context.Report;
+            return _context.Report.Where(x => x.status != "D");
         }
 
         // GET: api/Reports/5
@@ -110,29 +110,7 @@ namespace KBS2.WijkagentApp.API.Controllers
 
             return CreatedAtAction("GetReport", new { id = report.reportId }, report);
         }
-
-        // DELETE: api/Reports/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteReport([FromRoute] Guid id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var report = await _context.Report.FindAsync(id);
-            if (report == null)
-            {
-                return NotFound();
-            }
-
-            _context.Report.Remove(report);
-            await _context.SaveChangesAsync();
-
-            return Ok(report);
-        }
-
-
+        
         //PATCH ID
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] Report report)

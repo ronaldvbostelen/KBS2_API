@@ -21,13 +21,7 @@ namespace KBS2.WijkagentApp.API.Controllers
             _context = context;
         }
 
-        // GET: api/Socials
-        [HttpGet]
-        public IEnumerable<Socials> GetSocials()
-        {
-            return _context.Socials;
-        }
-
+        //based of personId
         // GET: api/Socials/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSocials([FromRoute] Guid id)
@@ -37,9 +31,9 @@ namespace KBS2.WijkagentApp.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var socials = await _context.Socials.FindAsync(id);
+            var socials = await Task.Run(() => _context.Socials.Where(x => x.personId.Equals(id)).AsEnumerable());
 
-            if (socials == null)
+            if (socials == null || !socials.Any())
             {
                 return NotFound();
             }

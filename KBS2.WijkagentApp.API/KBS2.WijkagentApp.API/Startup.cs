@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using KBS2.WijkagentApp.API.Context;
-using KBS2.WijkagentApp.API.Models;
+﻿using KBS2.WijkagentApp.API.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace KBS2.WijkagentApp.API
 {
@@ -44,7 +36,7 @@ namespace KBS2.WijkagentApp.API
                 app.UseHsts();
             }
 
-//            app.UseHttpsRedirection(); //ik krijg locale ssh certificaten niet goed (hopelijk op azure wel mogelijk)
+            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
