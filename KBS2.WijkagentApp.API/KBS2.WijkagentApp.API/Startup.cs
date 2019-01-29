@@ -36,7 +36,7 @@ namespace KBS2.WijkagentApp.API
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection(); //ik krijg locale ssh certificaten niet goed (hopelijk op azure wel mogelijk)
+            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
