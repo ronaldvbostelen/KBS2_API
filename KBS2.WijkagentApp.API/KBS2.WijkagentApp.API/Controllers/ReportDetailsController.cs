@@ -31,7 +31,7 @@ namespace KBS2.WijkagentApp.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var reportDetails = await Task.Run(() => _context.ReportDetails.Where(x => x.reportId.Equals(id)).AsEnumerable());
+            var reportDetails = _context.ReportDetails.Where(x => x.reportId.Equals(id));
 
             if (reportDetails == null || !reportDetails.Any())
             {

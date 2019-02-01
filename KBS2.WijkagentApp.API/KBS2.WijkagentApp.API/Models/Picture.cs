@@ -12,7 +12,5 @@ namespace KBS2.WijkagentApp.API.Models
 
         public Guid officialReportId { get; set; }
         public string URL { get; set; }
-
-        public virtual OfficialReport officialReport { get; set; }
     }
 }

@@ -27,6 +27,7 @@ namespace KBS2.WijkagentApp.API.Context
         public virtual DbSet<SocialMessage> SocialMessage { get; set; }
         public virtual DbSet<Socials> Socials { get; set; }
         public virtual DbSet<SoundRecord> SoundRecord { get; set; }
+        public virtual DbSet<testTable> testTable { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -53,12 +54,6 @@ namespace KBS2.WijkagentApp.API.Context
                 entity.Property(e => e.zipcode)
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.person)
-                    .WithOne(p => p.Address)
-                    .HasForeignKey<Address>(d => d.personId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Address_Person");
             });
 
             modelBuilder.Entity<Antecedent>(entity =>
@@ -84,12 +79,6 @@ namespace KBS2.WijkagentApp.API.Context
                 entity.Property(e => e.verdict)
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.person)
-                    .WithMany(p => p.Antecedent)
-                    .HasForeignKey(d => d.personId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Antecedent_Person");
             });
 
             modelBuilder.Entity<Emergency>(entity =>
@@ -117,12 +106,6 @@ namespace KBS2.WijkagentApp.API.Context
                 entity.Property(e => e.status)
                     .HasMaxLength(1)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.officer)
-                    .WithMany(p => p.Emergency)
-                    .HasForeignKey(d => d.officerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Emergency_Officer");
             });
 
             modelBuilder.Entity<Officer>(entity =>
@@ -134,17 +117,16 @@ namespace KBS2.WijkagentApp.API.Context
                 entity.Property(e => e.personId).ValueGeneratedNever();
 
                 entity.Property(e => e.passWord)
-                    .HasMaxLength(50)
+                    .HasMaxLength(356)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.salt)
+                    .HasMaxLength(228)
                     .IsUnicode(false);
 
                 entity.Property(e => e.userName)
                     .HasMaxLength(50)
                     .IsUnicode(false);
-                
-                entity.HasOne(d => d.person)
-                    .WithMany(p => p.Officer)
-                    .HasForeignKey(d => d.personId)
-                    .HasConstraintName("FK_personId_Officer");
             });
 
             modelBuilder.Entity<OfficialReport>(entity =>
@@ -166,18 +148,6 @@ namespace KBS2.WijkagentApp.API.Context
                 entity.Property(e => e.observation)
                     .HasMaxLength(255)
                     .IsUnicode(false);
-                
-                entity.HasOne(d => d.report)
-                    .WithMany(p => p.OfficialReport)
-                    .HasForeignKey(d => d.reportId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OfficialReport_Report");
-
-                entity.HasOne(d => d.reporter)
-                    .WithMany(p => p.OfficialReport)
-                    .HasForeignKey(d => d.reporterId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OfficialReport_Officer");
             });
 
             modelBuilder.Entity<Person>(entity =>
@@ -226,12 +196,6 @@ namespace KBS2.WijkagentApp.API.Context
                 entity.Property(e => e.URL)
                     .HasMaxLength(255)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.officialReport)
-                    .WithMany(p => p.Picture)
-                    .HasForeignKey(d => d.officialReportId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Picture_OfficialReport");
             });
 
             modelBuilder.Entity<PushMessage>(entity =>
@@ -259,18 +223,12 @@ namespace KBS2.WijkagentApp.API.Context
                 entity.Property(e => e.status)
                     .HasMaxLength(1)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.officer)
-                    .WithMany(p => p.PushMessage)
-                    .HasForeignKey(d => d.officerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PushMessage_Officer");
             });
 
             modelBuilder.Entity<Report>(entity =>
             {
                 entity.HasKey(e => e.reportId);
-
+                
                 entity.Property(e => e.reportId);
 
                 entity.Property(e => e.reporterId).ValueGeneratedNever();
@@ -298,17 +256,13 @@ namespace KBS2.WijkagentApp.API.Context
                 entity.Property(e => e.type)
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.reporter)
-                    .WithMany(p => p.Report)
-                    .HasForeignKey(d => d.reporterId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Report_Person");
             });
 
             modelBuilder.Entity<ReportDetails>(entity =>
             {
-                entity.HasKey(e => e.reportId);
+                entity.HasKey(e => e.reportDetailsId);
+
+                entity.Property(e => e.reportDetailsId);
 
                 entity.Property(e => e.reportId).ValueGeneratedNever();
 
@@ -325,18 +279,6 @@ namespace KBS2.WijkagentApp.API.Context
                 entity.Property(e => e.type)
                     .HasMaxLength(1)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.person)
-                    .WithMany(p => p.ReportDetails)
-                    .HasForeignKey(d => d.personId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ReportDetails_Person");
-
-                entity.HasOne(d => d.report)
-                    .WithOne(p => p.ReportDetails)
-                    .HasForeignKey<ReportDetails>(d => d.reportId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ReportDetails_Report");
             });
 
             modelBuilder.Entity<SocialMessage>(entity =>
@@ -350,12 +292,6 @@ namespace KBS2.WijkagentApp.API.Context
                 entity.Property(e => e.message)
                     .HasMaxLength(255)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.social)
-                    .WithMany(p => p.socialMessages)
-                    .HasForeignKey(d => d.socialsId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Socials_SocialMessage");
             });
 
             modelBuilder.Entity<Socials>(entity =>
@@ -367,12 +303,6 @@ namespace KBS2.WijkagentApp.API.Context
                 entity.Property(e => e.profile)
                     .HasMaxLength(255)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.person)
-                    .WithMany(p => p.Socials)
-                    .HasForeignKey(d => d.personId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Socials_Person");
             });
 
             modelBuilder.Entity<SoundRecord>(entity =>
@@ -386,12 +316,6 @@ namespace KBS2.WijkagentApp.API.Context
                 entity.Property(e => e.URL)
                     .HasMaxLength(255)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.officialReport)
-                    .WithMany(p => p.SoundRecord)
-                    .HasForeignKey(d => d.officialReportId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SoundRecord_OfficialReport");
             });
 
             modelBuilder.Entity<testTable>(entity =>
@@ -413,7 +337,5 @@ namespace KBS2.WijkagentApp.API.Context
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-        public DbSet<KBS2.WijkagentApp.API.Models.testTable> testTable { get; set; }
     }
 }

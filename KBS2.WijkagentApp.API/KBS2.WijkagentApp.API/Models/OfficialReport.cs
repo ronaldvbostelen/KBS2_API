@@ -7,12 +7,6 @@ namespace KBS2.WijkagentApp.API.Models
 {
     public partial class OfficialReport
     {
-        public OfficialReport()
-        {
-            Picture = new HashSet<Picture>();
-            SoundRecord = new HashSet<SoundRecord>();
-        }
-
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid officialReportId { get; set; }
 
@@ -21,10 +15,5 @@ namespace KBS2.WijkagentApp.API.Models
         public string observation { get; set; }
         public TimeSpan? time { get; set; }
         public string location { get; set; }
-
-        public virtual Report report { get; set; }
-        public virtual Officer reporter { get; set; }
-        public virtual ICollection<Picture> Picture { get; set; }
-        public virtual ICollection<SoundRecord> SoundRecord { get; set; }
     }
 }

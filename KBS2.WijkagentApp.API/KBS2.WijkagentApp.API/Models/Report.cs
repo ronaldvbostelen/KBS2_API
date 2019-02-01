@@ -7,11 +7,6 @@ namespace KBS2.WijkagentApp.API.Models
 {
     public partial class Report
     {
-        public Report()
-        {
-            OfficialReport = new HashSet<OfficialReport>();
-        }
-
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid reportId { get; set; }
 
@@ -25,9 +20,5 @@ namespace KBS2.WijkagentApp.API.Models
         public string comment { get; set; }
         public decimal? longitude { get; set; }
         public decimal? latitude { get; set; }
-
-        public virtual Person reporter { get; set; }
-        public virtual ReportDetails ReportDetails { get; set; }
-        public virtual ICollection<OfficialReport> OfficialReport { get; set; }
     }
 }

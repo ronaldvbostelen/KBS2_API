@@ -31,14 +31,14 @@ namespace KBS2.WijkagentApp.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var officialReport = await Task.Run(() => _context.OfficialReport.Where(x => x.reportId.Equals(id)));
+            var officialReport = _context.OfficialReport.Where(x => x.reportId.Equals(id));
 
-            if (officialReport == null || !officialReport.Any())
+            if (!officialReport.Any())
             {
                 return NotFound();
             }
 
-            return Ok(officialReport);
+            return Ok(officialReport.First());
         }
 
         // PUT: api/OfficialReports/5
