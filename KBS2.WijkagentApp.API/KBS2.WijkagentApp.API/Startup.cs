@@ -36,7 +36,7 @@ namespace KBS2.WijkagentApp.API
                 app.UseHsts();
             }
 
-//            app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
