@@ -129,14 +129,14 @@ namespace KBS2.WijkagentApp.API.Controllers
 
         //PATCH ID
         [HttpPatch("{id}")]
-        public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] ReportDetails reportDetails)
+        public async Task<IActionResult> PatchReportDetails([FromRoute] Guid id, [FromBody] ReportDetails reportDetails)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != reportDetails.reportId)
+            if (id != reportDetails.reportDetailsId)
             {
                 return BadRequest();
             }

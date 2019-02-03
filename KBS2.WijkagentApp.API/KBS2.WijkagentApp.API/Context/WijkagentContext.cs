@@ -93,7 +93,7 @@ namespace KBS2.WijkagentApp.API.Context
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.time).HasColumnType("time(7)");
+                entity.Property(e => e.time).HasColumnType("datetime");
 
                 entity.Property(e => e.latitude).HasColumnType("decimal(18, 10)");
 
@@ -131,15 +131,13 @@ namespace KBS2.WijkagentApp.API.Context
 
             modelBuilder.Entity<OfficialReport>(entity =>
             {
-                entity.HasKey(e => e.officialReportId);
-
-                entity.Property(e => e.officialReportId);
+                entity.HasKey(e => e.reportId);
 
                 entity.Property(e => e.reporterId).ValueGeneratedNever();
 
                 entity.Property(e => e.reportId).ValueGeneratedNever();
 
-                entity.Property(e => e.time).HasColumnType("time(7)");
+                entity.Property(e => e.time).HasColumnType("datetime");
 
                 entity.Property(e => e.location)
                     .HasMaxLength(150)
@@ -210,7 +208,7 @@ namespace KBS2.WijkagentApp.API.Context
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.time).HasColumnType("time(7)");
+                entity.Property(e => e.time).HasColumnType("datetime");
 
                 entity.Property(e => e.location)
                     .HasMaxLength(255)
@@ -235,7 +233,7 @@ namespace KBS2.WijkagentApp.API.Context
 
                 entity.Property(e => e.processedBy).ValueGeneratedNever();
 
-                entity.Property(e => e.time).HasColumnType("time(7)");
+                entity.Property(e => e.time).HasColumnType("datetime");
 
                 entity.Property(e => e.comment)
                     .HasMaxLength(255)
