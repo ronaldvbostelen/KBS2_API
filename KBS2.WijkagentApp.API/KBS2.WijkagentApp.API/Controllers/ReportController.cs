@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using KBS2.WijkagentApp.API.Context;
@@ -7,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using KBS2.WijkagentApp.API.Models;
+using KBS2.WijkagentApp.API.NotificationHub;
+using Newtonsoft.Json;
 
 namespace KBS2.WijkagentApp.API.Controllers
 {
@@ -108,12 +111,25 @@ namespace KBS2.WijkagentApp.API.Controllers
                 }
             }
 
+            try
+            {
+                // send the added report to all the clients
+                var hub = new Hub();
+                var pushMessage = hub.CreateMessagePackage("report", JsonConvert.SerializeObject(report));
+                var result = await hub.SendFcmNativeNotificationAsync(pushMessage);
+                Debug.Write(result.State.ToString());
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("PUSHMSG ERROR: " + e);
+            }
+
             return CreatedAtAction("GetReport", new { id = report.reportId }, report);
         }
         
         //PATCH ID
         [HttpPatch("{id}")]
-        public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] Report report)
+        public async Task<IActionResult> PatchReport([FromRoute] Guid id, [FromBody] Report report)
         {
             if (!ModelState.IsValid)
             {

@@ -10,7 +10,5 @@ namespace KBS2.WijkagentApp.API.Models
         public string zipcode { get; set; }
         public string street { get; set; }
         public string number { get; set; }
-
-        public virtual Person person { get; set; }
     }
 }

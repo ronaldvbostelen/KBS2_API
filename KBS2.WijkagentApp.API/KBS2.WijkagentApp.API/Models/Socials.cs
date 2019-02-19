@@ -12,8 +12,5 @@ namespace KBS2.WijkagentApp.API.Models
 
         public Guid personId { get; set; }
         public string profile { get; set; }
-
-        public virtual Person person { get; set; }
-        public virtual ICollection<SocialMessage> socialMessages { get; set; }
     }
 }

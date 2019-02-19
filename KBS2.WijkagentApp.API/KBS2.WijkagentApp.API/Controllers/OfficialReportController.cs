@@ -31,9 +31,10 @@ namespace KBS2.WijkagentApp.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var officialReport = await Task.Run(() => _context.OfficialReport.Where(x => x.reportId.Equals(id)));
+            var officialReport = await _context.OfficialReport.FindAsync(id);
+//            var officialReport = _context.OfficialReport.Where(x => x.reportId.Equals(id));
 
-            if (officialReport == null || !officialReport.Any())
+            if (officialReport == null)
             {
                 return NotFound();
             }
@@ -50,7 +51,7 @@ namespace KBS2.WijkagentApp.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != officialReport.officialReportId)
+            if (id != officialReport.reportId)
             {
                 return BadRequest();
             }
@@ -92,7 +93,7 @@ namespace KBS2.WijkagentApp.API.Controllers
             }
             catch (DbUpdateException)
             {
-                if (OfficialReportExists(officialReport.officialReportId))
+                if (OfficialReportExists(officialReport.reportId))
                 {
                     return new StatusCodeResult(StatusCodes.Status409Conflict);
                 }
@@ -102,7 +103,7 @@ namespace KBS2.WijkagentApp.API.Controllers
                 }
             }
 
-            return CreatedAtAction("GetOfficialReport", new { id = officialReport.officialReportId }, officialReport);
+            return CreatedAtAction("GetOfficialReport", new { id = officialReport.reportId }, officialReport);
         }
 
         // DELETE: api/OfficialReports/5
@@ -136,7 +137,7 @@ namespace KBS2.WijkagentApp.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != officialReport.officialReportId)
+            if (id != officialReport.reportId)
             {
                 return BadRequest();
             }
@@ -164,7 +165,7 @@ namespace KBS2.WijkagentApp.API.Controllers
 
         private bool OfficialReportExists(Guid id)
         {
-            return _context.OfficialReport.Any(e => e.officialReportId == id);
+            return _context.OfficialReport.Any(e => e.reportId == id);
         }
     }
 }

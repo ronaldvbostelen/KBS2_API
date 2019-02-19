@@ -14,7 +14,5 @@ namespace KBS2.WijkagentApp.API.Models
         public string verdict { get; set; }
         public string crime { get; set; }
         public string description { get; set; }
-
-        public virtual Person person { get; set; }
     }
 }

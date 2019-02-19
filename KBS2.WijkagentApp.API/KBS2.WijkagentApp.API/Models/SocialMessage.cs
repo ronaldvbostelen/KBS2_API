@@ -12,7 +12,5 @@ namespace KBS2.WijkagentApp.API.Models
 
         public Guid socialsId { get; set; }
         public string message { get; set; }
-
-        public virtual Socials social { get; set; }
     }
 }

@@ -7,15 +7,6 @@ namespace KBS2.WijkagentApp.API.Models
 {
     public partial class Person
     {
-        public Person()
-        {
-            Antecedent = new HashSet<Antecedent>();
-            Officer = new HashSet<Officer>();
-            Report = new HashSet<Report>();
-            ReportDetails = new HashSet<ReportDetails>();
-            Socials = new HashSet<Socials>();
-        }
-
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid personId { get; set; }
 
@@ -27,12 +18,5 @@ namespace KBS2.WijkagentApp.API.Models
         public string phoneNumber { get; set; }
         public string emailAddress { get; set; }
         public string description { get; set; }
-
-        public virtual Address Address { get; set; }
-        public virtual ICollection<Antecedent> Antecedent { get; set; }
-        public virtual ICollection<Officer> Officer { get; set; }
-        public virtual ICollection<Report> Report { get; set; }
-        public virtual ICollection<ReportDetails> ReportDetails { get; set; }
-        public virtual ICollection<Socials> Socials { get; set; }
     }
 }
