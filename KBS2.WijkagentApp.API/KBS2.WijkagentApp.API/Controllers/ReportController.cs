@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using KBS2.WijkagentApp.API.Models;
 using KBS2.WijkagentApp.API.NotificationHub;
+using Microsoft.Azure.NotificationHubs;
 using Newtonsoft.Json;
 
 namespace KBS2.WijkagentApp.API.Controllers
@@ -82,6 +83,19 @@ namespace KBS2.WijkagentApp.API.Controllers
                 }
             }
 
+            if (report.status == "D")
+            {
+                try
+                {
+                    var outcomeState = await SendDeleteReportMessage(report);
+                    Debug.Write(outcomeState.ToString());
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("PUSHMSG ERROR: " + e);
+                }
+            }
+
             return NoContent();
         }
 
@@ -115,7 +129,7 @@ namespace KBS2.WijkagentApp.API.Controllers
             {
                 // send the added report to all the clients
                 var hub = new Hub();
-                var pushMessage = hub.CreateMessagePackage("report", JsonConvert.SerializeObject(report));
+                var pushMessage = hub.CreateMessagePackage("addReport", JsonConvert.SerializeObject(report));
                 var result = await hub.SendFcmNativeNotificationAsync(pushMessage);
                 Debug.Write(result.State.ToString());
             }
@@ -158,13 +172,34 @@ namespace KBS2.WijkagentApp.API.Controllers
                     throw;
                 }
             }
-
+            
+            if (report.status == "D")
+            {
+                try
+                {
+                    var outcomeState = await SendDeleteReportMessage(report);
+                    Debug.Write(outcomeState.ToString());
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("PUSHMSG ERROR: " + e);
+                }
+            }
             return Ok(report);
         }
 
         private bool ReportExists(Guid id)
         {
             return _context.Report.Any(e => e.reportId == id);
+        }
+
+        private async Task<NotificationOutcomeState> SendDeleteReportMessage(Report report)
+        {
+            // inform report is deleted
+            var hub = new Hub();
+            var pushMessage = hub.CreateMessagePackage("deleteReport", "\"" + report.reportId.ToString() + "\"");
+            var result = await hub.SendFcmNativeNotificationAsync(pushMessage);
+            return result.State;
         }
     }
 }
