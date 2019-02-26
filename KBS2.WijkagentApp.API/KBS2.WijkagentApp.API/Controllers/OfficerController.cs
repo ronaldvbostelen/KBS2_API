@@ -41,6 +41,11 @@ namespace KBS2.WijkagentApp.API.Controllers
                 return NotFound();
             }
 
+            officer.userName = null;
+            officer.passWord = null;
+            officer.salt = null;
+            
+
             return Ok(officer);
         }
 
