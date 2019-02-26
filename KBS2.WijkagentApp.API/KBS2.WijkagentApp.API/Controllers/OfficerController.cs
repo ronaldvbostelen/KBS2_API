@@ -25,6 +25,30 @@ namespace KBS2.WijkagentApp.API.Controllers
             passwordManager = new PasswordManager();
         }
 
+        // GET: api/People/5
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetOfficer([FromRoute] Guid id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var officer = await _context.Officer.FindAsync(id);
+
+            if (officer == null)
+            {
+                return NotFound();
+            }
+
+            officer.userName = null;
+            officer.passWord = null;
+            officer.salt = null;
+            
+
+            return Ok(officer);
+        }
+
         //get logincredentials based on username/password (POST METHOD) URL = /login (NOT with api/tables)
         [HttpPost("/login")]
         public async Task<IActionResult> CheckOfficer([FromBody] Officer officer)
@@ -139,25 +163,25 @@ namespace KBS2.WijkagentApp.API.Controllers
         }
 
         // DELETE: api/Officers/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOfficer([FromRoute] Guid id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var officer = await _context.Officer.FindAsync(id);
-            if (officer == null)
-            {
-                return NotFound();
-            }
-
-            _context.Officer.Remove(officer);
-            await _context.SaveChangesAsync();
-
-            return Ok(officer);
-        }
+//        [HttpDelete("{id}")]
+//        public async Task<IActionResult> DeleteOfficer([FromRoute] Guid id)
+//        {
+//            if (!ModelState.IsValid)
+//            {
+//                return BadRequest(ModelState);
+//            }
+//
+//            var officer = await _context.Officer.FindAsync(id);
+//            if (officer == null)
+//            {
+//                return NotFound();
+//            }
+//
+//            _context.Officer.Remove(officer);
+//            await _context.SaveChangesAsync();
+//
+//            return Ok(officer);
+//        }
 
 
         //PATCH ID
