@@ -78,7 +78,7 @@ namespace KBS2.WijkagentApp.API.Controllers
 
                 foreach (var report in lookup)
                 {
-                    lookupReports.Add(report);
+                    if (!lookupReports.Contains(report)) lookupReports.Add(report);
                 }
             }
             
