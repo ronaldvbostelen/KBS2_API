@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 namespace KBS2.WijkagentApp.API.Controllers
 {
     [Route("api/tables/[controller]")]
+    [Route("api/reportquery")]
     [ApiController]
     public class ReportController : ControllerBase
     {
@@ -49,6 +50,40 @@ namespace KBS2.WijkagentApp.API.Controllers
             }
 
             return Ok(report);
+        }
+
+        // GET: api/Reports/5
+        [HttpGet("/reportquery/{parms}")]
+        public IActionResult QueryReports([FromRoute] string parms)
+        {   
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var words = parms.Split('_');
+
+            var lookupReports = new List<Report>();
+
+            foreach (var word in words)
+            {
+                var lookup =
+                from report in _context.Report
+                where report.location.Contains(word) || report.type.Contains(word) || report.comment.Contains(word)
+                select report;
+
+                foreach (var report in lookup)
+                {
+                    lookupReports.Add(report);
+                }
+            }
+            
+            if (!lookupReports.Any())       
+            {
+                return NotFound();
+            }
+
+            return Ok(lookupReports);
         }
 
         // PUT: api/Reports/5

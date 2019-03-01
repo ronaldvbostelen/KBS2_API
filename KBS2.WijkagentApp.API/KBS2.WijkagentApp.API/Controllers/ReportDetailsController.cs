@@ -24,7 +24,7 @@ namespace KBS2.WijkagentApp.API.Controllers
         //all reportdetails based on reportId
         // GET: api/ReportDetails/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetReportDetails([FromRoute] Guid id)
+        public IActionResult GetReportDetails([FromRoute] Guid id)
         {
             if (!ModelState.IsValid)
             {
