@@ -52,7 +52,7 @@ namespace KBS2.WijkagentApp.API.Controllers
             return Ok(report);
         }
 
-        // GET: api/Reports/5
+        // GET: query all reports for keywords, seperated by a underscore
         [HttpGet("/reportquery/{parms}")]
         public IActionResult QueryReports([FromRoute] string parms)
         {   
@@ -63,17 +63,13 @@ namespace KBS2.WijkagentApp.API.Controllers
 
             var words = parms.Split('_');
 
-            var activeReportsOnly = words[words.Length - 1] != "A";
-
-            words[words.Length - 1] = null;
-
             var lookupReports = new List<Report>();
 
             foreach (var word in words)
             {
                 var lookup =
                 from report in _context.Report
-                where (report.status == "A" || activeReportsOnly) && (report.location.Contains(word) || report.type.Contains(word) || report.comment.Contains(word))
+                where report.location.Contains(word) || report.type.Contains(word) || report.comment.Contains(word)
                 select report;
 
                 foreach (var report in lookup)
