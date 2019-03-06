@@ -95,13 +95,16 @@ namespace KBS2.WijkagentApp.API.Controllers
                 return BadRequest(ModelState);
             }
 
+            var officer = await _context.Officer.FindAsync(emergency.officerId);
+            var person = await _context.Person.FindAsync(officer.personId);
+
             _context.Emergency.Add(emergency);
             try
             {
                 await _context.SaveChangesAsync();
 
                 var hub = new Hub();
-                var pushMessage = hub.CreateMessagePackage("emergency", JsonConvert.SerializeObject(emergency));
+                var pushMessage = hub.CreateMessagePackage("emergency", JsonConvert.SerializeObject(emergency), $"{person.firstName} {person.lastName}");
                 var result = await hub.SendFcmNativeNotificationAsync(pushMessage);
                 Debug.Write(result.State.ToString());
             }

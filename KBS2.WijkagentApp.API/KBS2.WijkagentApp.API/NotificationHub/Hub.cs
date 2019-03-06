@@ -14,5 +14,6 @@ namespace KBS2.WijkagentApp.API.NotificationHub
 
         // create serialised package for processing by app
         public string CreateMessagePackage(string key, string jsonObject) => $"{{\"data\":{{\"key\":\"{key}\",\"content\":{jsonObject}}}}}";
+        public string CreateMessagePackage(string key, string jsonObject, string fullName) => $"{{\"data\":{{\"key\":\"{key}\",\"content\":{jsonObject}, \"fullName\":\"{fullName}\"}}}}";
     }
 }
