@@ -41,42 +41,6 @@ namespace KBS2.WijkagentApp.API.Controllers
             return Ok(antecedents);
         }
 
-        //update entry based on antecedentId
-        // PUT: api/Antecedents/{antecedentId}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutAntecedent([FromRoute] Guid id, [FromBody] Antecedent antecedent)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != antecedent.antecedentId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(antecedent).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AntecedentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         //insert into
         // POST: api/Antecedents
         [HttpPost]
@@ -129,7 +93,8 @@ namespace KBS2.WijkagentApp.API.Controllers
         }
 
         //update based on antecentID
-        //PATCH ID
+        //PATCH/PUT ID
+        [HttpPut("{id}")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] Antecedent antecedent)
         {

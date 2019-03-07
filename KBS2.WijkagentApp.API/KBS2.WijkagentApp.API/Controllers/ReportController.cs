@@ -86,54 +86,6 @@ namespace KBS2.WijkagentApp.API.Controllers
             return Ok(lookupReports);
         }
 
-        // PUT: api/Reports/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutReport([FromRoute] Guid id, [FromBody] Report report)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != report.reportId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(report).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ReportExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            if (report.status == "D")
-            {
-                try
-                {
-                    var outcomeState = await SendDeleteReportMessage(report);
-                    Debug.Write(outcomeState.ToString());
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine("PUSHMSG ERROR: " + e);
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/Reports
         [HttpPost]
         public async Task<IActionResult> PostReport([FromBody] Report report)
@@ -175,8 +127,9 @@ namespace KBS2.WijkagentApp.API.Controllers
 
             return CreatedAtAction("GetReport", new { id = report.reportId }, report);
         }
-        
-        //PATCH ID
+
+        //PATCH/PUT ID
+        [HttpPut("{id}")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchReport([FromRoute] Guid id, [FromBody] Report report)
         {

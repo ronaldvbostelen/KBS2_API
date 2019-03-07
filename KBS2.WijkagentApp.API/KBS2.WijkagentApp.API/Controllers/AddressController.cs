@@ -41,42 +41,6 @@ namespace KBS2.WijkagentApp.API.Controllers
             return Ok(address);
         }
 
-        //update
-        // PUT: Addresses/{personID}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutAddress([FromRoute] Guid id, [FromBody] Address address)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != address.personId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(address).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AddressExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         //insert
         // POST: api/Addresses
         [HttpPost]
@@ -129,7 +93,8 @@ namespace KBS2.WijkagentApp.API.Controllers
         }
 
         //update
-        //PATCH ID
+        //PATCH/PUT ID
+        [HttpPut("{id}")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] Address address)
         {

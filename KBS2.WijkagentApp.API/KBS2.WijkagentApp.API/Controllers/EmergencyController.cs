@@ -51,41 +51,6 @@ namespace KBS2.WijkagentApp.API.Controllers
             return Ok(emergency);
         }
 
-        // PUT: api/Emergencies/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmergency([FromRoute] Guid id, [FromBody] Emergency emergency)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != emergency.emergencyId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(emergency).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EmergencyExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/Emergencies
         [HttpPost]
         public async Task<IActionResult> PostEmergency([FromBody] Emergency emergency)
@@ -122,8 +87,9 @@ namespace KBS2.WijkagentApp.API.Controllers
 
             return CreatedAtAction("GetEmergency", new { id = emergency.emergencyId }, emergency);
         }
-        
-        //PATCH ID
+
+        //PATCH/PUT ID
+        [HttpPut("{id}")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] Emergency emergency)
         {

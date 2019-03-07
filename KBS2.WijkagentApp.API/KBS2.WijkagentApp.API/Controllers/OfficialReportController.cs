@@ -42,41 +42,6 @@ namespace KBS2.WijkagentApp.API.Controllers
             return Ok(officialReport);
         }
 
-        // PUT: api/OfficialReports/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutOfficialReport([FromRoute] Guid id, [FromBody] OfficialReport officialReport)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != officialReport.reportId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(officialReport).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OfficialReportExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/OfficialReports
         [HttpPost]
         public async Task<IActionResult> PostOfficialReport([FromBody] OfficialReport officialReport)
@@ -128,7 +93,8 @@ namespace KBS2.WijkagentApp.API.Controllers
         }
 
 
-        //PATCH ID
+        //PATCH/PUT ID
+        [HttpPut("{id}")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] OfficialReport officialReport)
         {

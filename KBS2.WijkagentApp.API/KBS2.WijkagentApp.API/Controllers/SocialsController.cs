@@ -41,41 +41,6 @@ namespace KBS2.WijkagentApp.API.Controllers
             return Ok(socials);
         }
 
-        // PUT: api/Socials/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutSocials([FromRoute] Guid id, [FromBody] Socials socials)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != socials.socialsId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(socials).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SocialsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/Socials
         [HttpPost]
         public async Task<IActionResult> PostSocials([FromBody] Socials socials)
@@ -127,7 +92,8 @@ namespace KBS2.WijkagentApp.API.Controllers
         }
 
 
-        //PATCH ID
+        //PATCH/PUT ID
+        [HttpPut("{id}")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] Socials socials)
         {

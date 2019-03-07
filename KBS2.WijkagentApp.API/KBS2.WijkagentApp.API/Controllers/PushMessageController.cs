@@ -41,41 +41,6 @@ namespace KBS2.WijkagentApp.API.Controllers
             return Ok(pushMessage);
         }
 
-        // PUT: api/PushMessages/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPushMessage([FromRoute] Guid id, [FromBody] PushMessage pushMessage)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != pushMessage.pushMessageId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(pushMessage).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PushMessageExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/PushMessages
         [HttpPost]
         public async Task<IActionResult> PostPushMessage([FromBody] PushMessage pushMessage)
@@ -105,7 +70,8 @@ namespace KBS2.WijkagentApp.API.Controllers
             return CreatedAtAction("GetPushMessage", new { id = pushMessage.pushMessageId }, pushMessage);
         }
 
-        //PATCH ID
+        //PATCH/PUT ID
+        [HttpPut("{id}")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] PushMessage pushMessage)
         {

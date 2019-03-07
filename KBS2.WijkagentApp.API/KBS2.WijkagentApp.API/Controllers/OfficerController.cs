@@ -41,10 +41,7 @@ namespace KBS2.WijkagentApp.API.Controllers
                 return NotFound();
             }
 
-            officer.userName = null;
-            officer.passWord = null;
-            officer.salt = null;
-            
+            officer.userName = officer.passWord = officer.salt = null;
 
             return Ok(officer);
         }
@@ -80,41 +77,6 @@ namespace KBS2.WijkagentApp.API.Controllers
             }
         }
 
-        // PUT: api/Officers/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutOfficer([FromRoute] Guid id, [FromBody] Officer officer)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != officer.officerId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(officer).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OfficerExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/Officers
         [HttpPost]
         public async Task<IActionResult> PostOfficer([FromBody] Officer officer)
@@ -129,10 +91,8 @@ namespace KBS2.WijkagentApp.API.Controllers
             //have to save because personId is server-side generated
             await _context.SaveChangesAsync();
 
-             //generate hashes
-            string passwordHash;
-            string saltHash;
-            passwordManager.GenerateSaltedHash(officer.passWord,out passwordHash, out saltHash);
+            //generate hashes
+            passwordManager.GenerateSaltedHash(officer.passWord, out string passwordHash, out string saltHash);
 
             //update object
             officer.passWord = passwordHash;
@@ -157,34 +117,13 @@ namespace KBS2.WijkagentApp.API.Controllers
                 }
             }
             //we arnt sending confidential info back
-            officer.passWord = officer.salt = String.Empty;
+            officer.userName = officer.passWord = officer.salt = null;
 
             return CreatedAtAction("CheckOfficer", new { id = officer.officerId }, officer);
         }
-
-        // DELETE: api/Officers/5
-//        [HttpDelete("{id}")]
-//        public async Task<IActionResult> DeleteOfficer([FromRoute] Guid id)
-//        {
-//            if (!ModelState.IsValid)
-//            {
-//                return BadRequest(ModelState);
-//            }
-//
-//            var officer = await _context.Officer.FindAsync(id);
-//            if (officer == null)
-//            {
-//                return NotFound();
-//            }
-//
-//            _context.Officer.Remove(officer);
-//            await _context.SaveChangesAsync();
-//
-//            return Ok(officer);
-//        }
-
-
-        //PATCH ID
+        
+        //PATCH/PUT ID
+        [HttpPut("{id}")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] Officer officer)
         {
@@ -198,7 +137,21 @@ namespace KBS2.WijkagentApp.API.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(officer).State = EntityState.Modified;
+            var oldOfficer = await _context.Officer.FindAsync(id);
+
+            if (oldOfficer.userName != officer.userName || oldOfficer.personId != officer.personId)
+            {
+                return BadRequest();
+            }
+
+            //generate hashes
+            passwordManager.GenerateSaltedHash(officer.passWord, out string passwordHash, out string saltHash);
+
+            //update object
+            oldOfficer.passWord = passwordHash;
+            oldOfficer.salt = saltHash;
+
+            _context.Entry(oldOfficer).State = EntityState.Modified;
 
             try
             {
@@ -215,6 +168,8 @@ namespace KBS2.WijkagentApp.API.Controllers
                     throw;
                 }
             }
+
+            officer.userName = officer.passWord = officer.salt = null;
 
             return Ok(officer);
         }

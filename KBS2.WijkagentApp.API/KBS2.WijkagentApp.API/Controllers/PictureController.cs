@@ -41,41 +41,6 @@ namespace KBS2.WijkagentApp.API.Controllers
             return Ok(picture);
         }
 
-        // PUT: api/Pictures/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPicture([FromRoute] Guid id, [FromBody] Picture picture)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != picture.officialReportId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(picture).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PictureExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/Pictures
         [HttpPost]
         public async Task<IActionResult> PostPicture([FromBody] Picture picture)
@@ -127,7 +92,8 @@ namespace KBS2.WijkagentApp.API.Controllers
         }
 
 
-        //PATCH ID
+        //PATCH/PUT ID
+        [HttpPut("{id}")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] Picture picture)
         {

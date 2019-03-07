@@ -41,41 +41,6 @@ namespace KBS2.WijkagentApp.API.Controllers
             return Ok(soundRecord);
         }
 
-        // PUT: api/SoundRecords/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutSoundRecord([FromRoute] Guid id, [FromBody] SoundRecord soundRecord)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != soundRecord.soundRecordId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(soundRecord).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SoundRecordExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/SoundRecords
         [HttpPost]
         public async Task<IActionResult> PostSoundRecord([FromBody] SoundRecord soundRecord)
@@ -127,7 +92,8 @@ namespace KBS2.WijkagentApp.API.Controllers
         }
 
 
-        //PATCH ID
+        //PATCH/PUT ID
+        [HttpPut("{id}")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchtestTable([FromRoute] Guid id, [FromBody] SoundRecord soundRecord)
         {
