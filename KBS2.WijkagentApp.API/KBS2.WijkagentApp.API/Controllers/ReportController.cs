@@ -114,11 +114,11 @@ namespace KBS2.WijkagentApp.API.Controllers
 
             try
             {
-                await SendReportPushMessage(report);
+                var pushMsgTask = SendReportPushMessage(report);
             }
             catch (Exception e)
             {
-                Console.WriteLine("PUSHMSG ERROR: " + e);
+                Debug.WriteLine("PUSHMSG ERROR: " + e);
             }
 
             return CreatedAtAction("GetReport", new { id = report.reportId }, report);
@@ -159,11 +159,11 @@ namespace KBS2.WijkagentApp.API.Controllers
 
             try
             {
-                await SendReportPushMessage(report);
+                var pushMsgTask = SendReportPushMessage(report);
             }
             catch (Exception e)
             {
-                Console.WriteLine("PUSHMSG ERROR: " + e);
+                Debug.WriteLine("PUSHMSG ERROR: " + e);
             }
 
             return Ok(report);
