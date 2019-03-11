@@ -71,7 +71,7 @@ namespace KBS2.WijkagentApp.API.Controllers
                 var hub = new Hub();
                 var pushMessage = hub.CreateMessagePackage("emergency", JsonConvert.SerializeObject(emergency), $"{person.firstName} {person.lastName}");
                 var result = await hub.SendFcmNativeNotificationAsync(pushMessage);
-                Debug.Write(result.State.ToString());
+                Console.Write(result.State.ToString());
             }
             catch (DbUpdateException)
             {
